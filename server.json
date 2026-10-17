@@ -1,0 +1,31 @@
+{
+  "name": "web-extract",
+  "description": "Local HTML -> structured extraction MCP server (links/tables/title/body), zero dependency on network.",
+  "version": "0.1.0",
+  "repository": {
+    "url": "https://github.com/diyaluo/web-extract-mcp",
+    "source": "github"
+  },
+  "packages": [
+    {
+      "registry_type": "oci",
+      "registry": "ghcr.io",
+      "namespace": "diyalu0",
+      "name": "web-extract-mcp",
+      "reference": "v0.1.0"
+    }
+  ],
+  "remotes": [
+    {
+      "type": "stdio"
+    }
+  ],
+  "tools": [
+    {
+      "name": "extract_page"
+    },
+    {
+      "name": "extract_batch"
+    }
+  ]
+}

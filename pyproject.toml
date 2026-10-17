@@ -1,0 +1,25 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "web-extract-mcp"
+version = "0.1.0"
+description = "Local HTML -> structured extraction MCP server (links/tables/title/body), zero dependency on network."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "diyaluo" }]
+dependencies = [
+  "mcp>=1.0",
+  "openpyxl>=3.1",
+]
+
+[project.scripts]
+web_extract_mcp = "web_extract_mcp.server:main"
+
+[project.urls]
+Homepage = "https://github.com/diyaluo/web-extract-mcp"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/web_extract_mcp"]

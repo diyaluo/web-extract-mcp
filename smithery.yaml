@@ -1,0 +1,8 @@
+start:
+  configSchema:
+    type: object
+    properties: {}
+  command:
+    - python
+    - "-m"
+    - web_extract_mcp.server
