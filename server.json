@@ -1,23 +1,35 @@
 {
-  "name": "web-extract",
-  "description": "Local HTML -> structured extraction MCP server (links/tables/title/body), zero dependency on network.",
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.diyaluo/web-extract-mcp",
+  "description": "Local HTML to structured extraction MCP server (links, tables, title, body), offline.",
   "version": "0.1.0",
-  "repository": {
-    "url": "https://github.com/diyaluo/web-extract-mcp",
-    "source": "github"
-  },
   "packages": [
     {
-      "registry_type": "oci",
-      "registry": "ghcr.io",
-      "namespace": "diyalu0",
-      "name": "web-extract-mcp",
-      "reference": "v0.1.0"
-    }
-  ],
-  "remotes": [
-    {
-      "type": "stdio"
+      "registryType": "oci",
+      "identifier": "ghcr.io/diyaluo/web-extract-mcp:v0.1.0",
+      "version": "0.1.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "runtimeHint": "docker",
+      "runtimeArguments": [
+        {
+          "type": "positional",
+          "value": "run"
+        },
+        {
+          "type": "positional",
+          "value": "-i"
+        },
+        {
+          "type": "positional",
+          "value": "--rm"
+        },
+        {
+          "type": "positional",
+          "value": "ghcr.io/diyaluo/web-extract-mcp:v0.1.0"
+        }
+      ]
     }
   ],
   "tools": [
