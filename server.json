@@ -7,7 +7,6 @@
     {
       "registryType": "oci",
       "identifier": "ghcr.io/diyaluo/web-extract-mcp:v0.1.0",
-      "version": "0.1.0",
       "transport": {
         "type": "stdio"
       },
