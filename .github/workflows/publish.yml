@@ -1,0 +1,65 @@
+name: Publish MCP Server
+
+# Build & push OCI image to ghcr.io, then publish metadata to the official
+# Model Context Protocol registry using GitHub OIDC (no long-lived tokens).
+# Triggered by pushing a tag like v0.1.0.
+#
+# PREREQUISITE (one-time, web UI only):
+#   Package settings -> Manage Actions access -> add this repo, set package Public
+#   https://github.com/users/diyaluo/packages/container/web-extract-mcp/settings
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      skip_image:
+        description: "Skip image build/push (image already exists)"
+        required: false
+        default: "false"
+
+permissions:
+  contents: read
+  packages: write
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        if: ${ github.event.inputs.skip_image != 'true' }
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${ github.repository_owner }
+          password: ${ secrets.GITHUB_TOKEN }
+
+      - name: Build and push image
+        if: ${ github.event.inputs.skip_image != 'true' }
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/${ github.repository_owner }/web-extract-mcp:${ github.ref_name }
+            ghcr.io/${ github.repository_owner }/web-extract-mcp:latest
+
+      - name: Install mcp-publisher
+        run: |
+          curl -fsSL "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_linux_$( [ "$(uname -m)" = "aarch64" ] && echo arm64 || echo amd64 ).tar.gz" -o /tmp/mcp-pub.tgz
+          tar xzf /tmp/mcp-pub.tgz -C /usr/local/bin mcp-publisher
+          mcp-publisher --version
+
+      - name: Pin image tag in server.json
+        env:
+          IMAGE_TAG: ${ github.ref_name }
+        run: |
+          sed -i "s#ghcr.io/diyaluo/web-extract-mcp:v[0-9.]*#ghcr.io/${GITHUB_REPOSITORY_OWNER}/web-extract-mcp:${IMAGE_TAG}#" server.json
+          grep 'identifier' server.json
+          mcp-publisher validate
+
+      - name: Publish to MCP Registry (OIDC)
+        run: mcp-publisher login github-oidc && mcp-publisher publish
