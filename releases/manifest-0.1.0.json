@@ -1,0 +1,44 @@
+{
+  "manifest_version": "0.4",
+  "name": "web-extract-mcp",
+  "display_name": "Web Extract MCP",
+  "version": "0.1.0",
+  "description": "Parse local HTML/HTM files into structured Markdown, tables (CSV/XLSX), and link JSON, fully offline. No network fetching.",
+  "long_description": "Local-first HTML extraction: table/element structure to Markdown, tables to CSV or Excel, links to JSON with relative-to-absolute resolution, batch directory mode. Python stdlib HTMLParser + openpyxl, runs entirely on the user's machine, never fetches URLs.",
+  "author": {
+    "name": "diyaluo"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/diyaluo/web-extract-mcp"
+  },
+  "homepage": "https://github.com/diyaluo/web-extract-mcp",
+  "license": "MIT",
+  "keywords": [
+    "html",
+    "web",
+    "extraction",
+    "markdown",
+    "tables",
+    "offline",
+    "local-first"
+  ],
+  "server": {
+    "type": "python",
+    "entry_point": "server/server.py",
+    "mcp_config": {
+      "command": "python",
+      "args": [
+        "${__dirname}/server/server.py"
+      ],
+      "env": {}
+    }
+  },
+  "compatibility": {
+    "platforms": [
+      "darwin",
+      "linux",
+      "win32"
+    ]
+  }
+}
