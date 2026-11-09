@@ -1,5 +1,8 @@
 # web-extract MCP
 
+> 📄 **Project landing page (use cases and install guide): https://diyaluo.github.io/web-extract-mcp/**
+
+
 本地已保存网页解析的 MCP 封装（**不主动访问网络、不爬站**，只解析本地
 `.html/.htm`）。核心引擎来自 `data/disk/projects/web-extract-skill`
 （Python 标准库 HTMLParser，导出 xlsx 时才需 openpyxl）。

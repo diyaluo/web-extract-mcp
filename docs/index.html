@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>web-extract-mcp — Local Saved-HTML to Markdown/Table/Link Extraction MCP Server</title>
+  <meta name="description" content="Open-source Model Context Protocol server that parses locally saved HTML files into clean Markdown text, spreadsheet tables (XLSX/CSV) and link JSON, offline. It never crawls or fetches the network; relative links are resolved to absolute. For Claude Desktop, Cursor and any MCP client.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://diyaluo.github.io/web-extract-mcp/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="web-extract-mcp — Local HTML Structured Extraction MCP Server">
+  <meta property="og:description" content="Let any MCP AI agent parse saved HTML into Markdown, tables and link JSON fully offline. No crawling, no network, files stay local.">
+  <meta property="og:url" content="https://diyaluo.github.io/web-extract-mcp/">
+  <meta name="twitter:card" content="summary">
+  <script type="application/ld+json">
+  {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "web-extract-mcp",
+      "url": "https://diyaluo.github.io/web-extract-mcp/",
+      "downloadUrl": "https://github.com/diyaluo/web-extract-mcp",
+      "softwareHelp": "https://github.com/diyaluo/web-extract-mcp",
+      "description": "Open-source Model Context Protocol server that parses locally saved HTML files into clean Markdown text, spreadsheet tables (XLSX/CSV) and link JSON, offline. It never crawls or fetches the network; relative links are resolved to absolute. For Claude Desktop, Cursor and any MCP client.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Windows, macOS, Linux",
+      "license": "https://github.com/diyaluo/web-extract-mcp/blob/master/LICENSE",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "featureList": [
+        "MCP server for local saved-HTML parsing",
+        "HTML to Markdown, tables (XLSX/CSV) and link JSON",
+        "Batch directory processing with index file",
+        "Strips scripts and styles, resolves relative links to absolute",
+        "Fully offline — never crawls or fetches the network",
+        "Standard-library HTMLParser, lightweight dependencies",
+        "Works with Claude Desktop, Cursor and any MCP client"
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Open Source MCP Tools",
+          "item": "https://diyaluo.github.io/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "web-extract-mcp",
+          "item": "https://diyaluo.github.io/web-extract-mcp/"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What does this MCP server do?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It gives an MCP-compatible agent tools to parse locally saved HTML files: extract_page handles one file and can output Markdown text, spreadsheet tables or a link JSON, while extract_batch processes a whole directory with an index."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does it crawl websites or fetch URLs?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. It only parses .html/.htm files already saved on disk and never makes a network request, which makes it safe for offline and air-gapped environments."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How are tables exported?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "With mode=tables, an .xlsx output path produces a workbook with multiple sheets; otherwise tables are written as CSV files into a directory."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How are relative links handled?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Relative href values are converted to absolute URLs using the page's base tag or a base_url argument you supply, so the exported link JSON is directly usable."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which MCP clients are supported?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Any Model Context Protocol client over stdio, including Claude Desktop and Cursor. It is published to the official MCP Registry as io.github.diyaluo/web-extract-mcp and on GHCR."
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
+  <style>
+    :root { --ink:#0f172a; --muted:#475569; --line:#e2e8f0; --accent:#2563eb; --bg:#f8fafc; --card:#fff; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif; color:var(--ink); background:var(--bg); line-height:1.65; }
+    .wrap { max-width:880px; margin:0 auto; padding:0 24px; }
+    header.hero { background:linear-gradient(135deg,#0f172a,#1e3a8a); color:#fff; padding:72px 0 64px; }
+    .badge { display:inline-block; font-size:.8rem; font-weight:600; letter-spacing:.04em; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.25); padding:5px 12px; border-radius:999px; margin-bottom:20px; }
+    h1 { font-size:2.3rem; line-height:1.2; margin:0 0 16px; }
+    .lead { font-size:1.15rem; color:#cbd5e1; max-width:680px; margin:0 0 28px; }
+    .cta-row { display:flex; gap:14px; flex-wrap:wrap; }
+    .btn { display:inline-block; padding:12px 22px; border-radius:10px; font-weight:600; text-decoration:none; font-size:.95rem; }
+    .btn-primary { background:var(--accent); color:#fff; }
+    .btn-primary:hover { filter:brightness(1.08); }
+    .btn-ghost { background:transparent; color:#fff; border:1px solid rgba(255,255,255,.4); }
+    main { padding:56px 0 24px; }
+    section { margin-bottom:48px; }
+    h2 { font-size:1.5rem; margin:0 0 18px; }
+    h3 { font-size:1.1rem; margin:24px 0 8px; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:22px; }
+    .card h3 { margin-top:0; }
+    .card p { color:var(--muted); font-size:.95rem; margin:6px 0 0; }
+    pre { background:#0f172a; color:#e2e8f0; padding:18px; border-radius:12px; overflow-x:auto; font-size:.88rem; line-height:1.55; }
+    code { font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace; }
+    p code, li code { background:#eef2ff; color:#3730a3; padding:2px 6px; border-radius:6px; font-size:.88em; }
+    ul.clean { list-style:none; padding:0; margin:0; }
+    ul.clean li { padding:8px 0 8px 28px; position:relative; border-bottom:1px solid var(--line); }
+    ul.clean li:last-child { border-bottom:0; }
+    ul.clean li::before { content:"\2713"; position:absolute; left:0; color:#16a34a; font-weight:700; }
+    .faq details { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px 20px; margin-bottom:12px; }
+    .faq summary { font-weight:600; cursor:pointer; }
+    .faq p { color:var(--muted); margin:10px 0 0; font-size:.95rem; }
+    .meta { color:var(--muted); font-size:.9rem; }
+    a { color:var(--accent); }
+    footer { border-top:1px solid var(--line); padding:32px 0 48px; color:var(--muted); font-size:.9rem; }
+</style>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <span class="badge">Open Source &middot; Model Context Protocol &middot; MIT</span>
+      <h1>Parse saved web pages into clean text, tables and links inside an AI agent — without it ever touching the network</h1>
+      <p class="lead">web-extract-mcp is a local MCP server that parses already-saved .html/.htm files into Markdown, XLSX/CSV tables and link JSON. It never crawls or fetches URLs, so extraction stays fully offline and deterministic.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="https://github.com/diyaluo/web-extract-mcp">View on GitHub</a>
+        <a class="btn btn-ghost" href="#install">Install guide</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section>
+      <h2>Why an MCP server for this</h2>
+      <p class="meta">Letting an agent browse the live web is slow, unpredictable and leaks intent. When you already have the HTML (an export, an archive, a captured page), this server extracts exactly the text, tables or links you need locally and repeatably, with no network access at all.</p>
+      <div class="grid" style="margin-top:20px">
+<div class="card"><h3>Research and archiving</h3><p>Turn a folder of saved pages into clean Markdown notes with a batch index, ready for a knowledge base or RAG corpus.</p></div>
+<div class="card"><h3>Table harvesting</h3><p>Extract HTML tables from saved pages straight into an Excel workbook or a set of CSV files for analysis.</p></div>
+<div class="card"><h3>Link auditing</h3><p>Export every link as JSON with relative URLs resolved to absolute, to check targets or build sitemaps offline.</p></div>
+<div class="card"><h3>Compliance and forensics</h3><p>Process captured pages in an air-gapped environment where the agent is forbidden from making any outbound request.</p></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>What it does</h2>
+      <ul class="clean">
+<li><strong>extract_page(input, output, mode)</strong> — parse one local .html/.htm: <code>all</code> yields body Markdown, <code>tables</code> exports XLSX (or a CSV directory), <code>links</code> exports a link list as JSON.</li>
+<li><strong>extract_batch(input_dir, output_dir, ...)</strong> — process a whole directory, one sub-folder per page plus a <code>_batch_index.json</code>; recursive option for nested folders.</li>
+<li>Automatically strips script, style, noscript and SVG content; separates tables from body text.</li>
+<li>Relative links resolved to absolute using the page's <code>&lt;base&gt;</code> tag or an explicit base_url.</li>
+<li>Optionally retain JSON-LD / inline JS and add YAML frontmatter to Markdown output.</li>
+<li>Built on the standard-library HTMLParser (openpyxl only needed for XLSX). <strong>Never accesses the network</strong>; includes a selftest tool.</li>
+      </ul>
+    </section>
+
+    <section id="install">
+      <h2>Install and connect</h2>
+      <p>Published to the official MCP Registry as <code>io.github.diyaluo/web-extract-mcp</code> and as an OCI image on GHCR. Run locally over stdio:</p>
+      <pre><code>pip install -e .
+web_extract_mcp</code></pre>
+      <p>Client configuration (Claude Desktop / Cursor / any MCP client):</p>
+      <pre><code>{
+  "mcpServers": {
+    "web-extract": {
+      "command": "web_extract_mcp",
+      "env": {}
+    }
+  }
+}</code></pre>
+      <p class="meta">The server only reads local files and makes no outbound requests. Point it at an .html/.htm file or a directory of saved pages; it will not crawl or contact any remote host.</p>
+    </section>
+
+    <section class="faq">
+      <h2>Frequently asked questions</h2>
+<details open><summary>What does this MCP server do?</summary><p>It gives an MCP-compatible agent tools to parse locally saved HTML files: extract_page handles one file and can output Markdown text, spreadsheet tables or a link JSON, while extract_batch processes a whole directory with an index.</p></details>
+<details><summary>Does it crawl websites or fetch URLs?</summary><p>No. It only parses .html/.htm files already saved on disk and never makes a network request, which makes it safe for offline and air-gapped environments.</p></details>
+<details><summary>How are tables exported?</summary><p>With mode=tables, an .xlsx output path produces a workbook with multiple sheets; otherwise tables are written as CSV files into a directory.</p></details>
+<details><summary>How are relative links handled?</summary><p>Relative href values are converted to absolute URLs using the page&#x27;s base tag or a base_url argument you supply, so the exported link JSON is directly usable.</p></details>
+<details><summary>Which MCP clients are supported?</summary><p>Any Model Context Protocol client over stdio, including Claude Desktop and Cursor. It is published to the official MCP Registry as io.github.diyaluo/web-extract-mcp and on GHCR.</p></details>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <p>web-extract-mcp &middot; MIT License &middot; <a href="https://github.com/diyaluo/web-extract-mcp">GitHub repository</a> &middot; <a href="https://github.com/diyaluo/web-extract-mcp/blob/master/LICENSE">license</a></p>
+      <p>Part of the diyaluo local-first developer tools collection. Distributed through the official MCP Registry and GHCR.</p>
+    </div>
+  </footer>
+</body>
+</html>
